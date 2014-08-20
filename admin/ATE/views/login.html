@@ -1,0 +1,33 @@
+<!-- Main row -->
+<div class="row">
+    <div class="col-md-6">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">Quick Example</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form role="form">
+                <div class="box-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" >Username</label>
+                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter user name" ng-model="credentials.username">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" ng-model="credentials.password">
+                    </div>
+                </div>
+                <!-- /.box-body -->
+
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-primary" ng-click="authenticate(credentials);">Submit</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.box -->
+
+    </div>
+</div>
+<!-- /.row (main row) -->

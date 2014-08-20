@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+
+
+module.exports =  function (sequelize, DataType) {
+
+    var Link = sequelize.define('Link', {
+
+        type: { 
+            type: DataType.STRING,
+            allowNull: false
+        },
+        
+        link: {
+            type: DataType.TEXT,
+            allowNull: false,
+            validate: {
+                isUrl: true
+            }
+        }
+      
+    }, {
+
+        classMethods: {
+
+            new: function(type, link){
+
+                return Link.build({
+                    type: type,
+                    link: link
+                }).save();
+
+            }
+
+        }
+
+    });
+
+    var Customer = sequelize.models.Customer;
+    Customer.hasMany(Link, {as: 'Links', foreignKey: 'CustomerId', useJunctionTable: false });
+    Link.belongsTo(Customer, {as: 'Customer', foreignKey: 'CustomerId'});
+
+    return Link;
+
+};
+
