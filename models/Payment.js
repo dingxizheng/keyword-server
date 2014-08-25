@@ -1,44 +1,51 @@
 #!/usr/bin/env node
 
-module.exports = function (sequelize, DataType) {
+module.exports = function(sequelize, DataType) {
 
-	var Payment = sequelize.define('Payment', {
-	    
-	    expireAt: {
-	    	type: DataType.DATE,
-	    	allowNull: false
-	    }
-	    
-	}, {
+    var Payment = sequelize.define('Payment', {
 
-		classMethods: {
+        expireAt: {
+            type: DataType.DATE,
+            allowNull: false
+        }
 
-			new: function (expireAt) {
+    }, {
 
-				return Payment.build({
+        classMethods: {
 
-					expireAt: expireAt
+            new: function(expireAt) {
 
-				}).save();
+                return Payment.build({
 
-			},
+                    expireAt: expireAt
 
-			delete: function (payment) {
+                }).save();
 
-				return payment.delete();
+            },
 
-			}, 
+            delete: function(payment) {
 
-			getValidPayments: function () {}
+                return payment.delete();
 
-		}
+            },
 
-	});
+            getValidPayments: function() {}
 
-	var Customer = sequelize.models.Customer;
-	Customer.hasMany(Payment, {as: 'Payments', foreignKey: 'CustomerId', useJunctionTable: false });
-	Payment.belongsTo(Customer, { as: 'Customer', foreignKey: 'CustomerId'});
+        }
 
-	return Payment;
+    });
+
+    var Customer = sequelize.models.Customer;
+    Customer.hasMany(Payment, {
+        as: 'Payments',
+        foreignKey: 'CustomerId',
+        useJunctionTable: false
+    });
+    Payment.belongsTo(Customer, {
+        as: 'Customer',
+        foreignKey: 'CustomerId'
+    });
+
+    return Payment;
 
 };

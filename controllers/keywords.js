@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var DB = require('../db');
+var Q = require('q');
 var Keyword = DB['Keyword'];
 
 
@@ -10,23 +11,15 @@ router.get('/', function(req, res, next) {
 
     Keyword.all().success(function(keywords) {
 
-        var counter = keywords.length;
+        var promiseArr = [];
 
         keywords.forEach(function(keyword) {
-            // console.log(keyword.name);
-            keyword.getCustomers().success(function(customers) {
-                console.log(customers.length);
-                // customers.map(function(cus) {
-                //     return cus.name
-                // });
-                // keyword.dataValues.customers = customers;
-                // counter--;
-                // if (counter === 0) {
-                //     res.send(keywords.map(function(kw) {
-                //         return kw.dataValues;
-                //     }));
-                // }
-            });
+            var promise = keyword.getCustomers();
+            promiseArr.push(promise);
+        });
+
+        Q.all(promiseArr).then(function (results) {
+            console.log(results);
         });
 
     });

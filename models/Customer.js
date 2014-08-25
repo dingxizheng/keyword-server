@@ -24,6 +24,12 @@ module.exports = function(sequelize, DataType) {
                 }
             },
 
+            logo: {
+                type: DataType.STRING,
+                allowNull: true,
+                defaultValue: 'null'
+            },
+
             email: {
                 type: DataType.STRING,
                 allowNull: false,
@@ -57,14 +63,15 @@ module.exports = function(sequelize, DataType) {
                  * @param callback
                  *       calllback function
                  */
-                new: function(name, description, telephone, email, address) {
+                new: function(name, description, telephone, email, address, logo) {
 
                     return Customer.build({
                             name: name,
                             description: description,
                             telephone: telephone,
                             email: email,
-                            address: address
+                            address: address,
+                            logo: logo
                         })
                         .save();
 

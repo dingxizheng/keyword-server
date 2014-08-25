@@ -1,11 +1,18 @@
 #!/usr/bin/env node
 
-var DB        = require('./db');
-var Customer  = DB['Customer'];
-var Keyword   = DB['Keyword'];
-var Link      = DB['Link'];
-var Payment   = DB['Payment'];
+var DB = require('./db');
+var Customer = DB['Customer'];
+var Keyword = DB['Keyword'];
+var Link = DB['Link'];
+var Payment = DB['Payment'];
 var Promotion = DB['Promotion'];
+var Q = require('q');
+
+var fs = require('fs');
+var gm = require('gm').subClass({
+    imageMagick: true
+});
+
 
 // console.log(DB);
 
@@ -70,25 +77,26 @@ var Promotion = DB['Promotion'];
 
 // });
 
-Payment.all().success(function(payments){
 
-	payments.forEach(function (payment) {
+// Payment.all().success(function(payments){
 
-		payment.getCustomer().success(function (customer) {
-			console.log(customer.name);
-		});
+// 	payments.forEach(function (payment) {
 
-		// console.log(payment);
+// 		payment.getCustomer().success(function (customer) {
+// 			console.log(customer.name);
+// 		});
 
-	});
+// 		// console.log(payment);
 
-});
+// 	});
+
+// });
 
 
 
 // Keyword.all().success(function (words) {
 //     words.forEach(function (word) {
-        
+
 //     	word.getCustomers()
 //     		.success(function (cs) {
 
@@ -101,19 +109,29 @@ Payment.all().success(function(payments){
 //     });
 // });
 
-// Keyword.findByName('nike')
-//       .success(function (word) {
-           
-//           word.getCustomers()
-//               .success(function (customers) {
+Customer.new(
 
+   'dingxizheng',
+   'This is dingxizheng\'s Business',
+   '8076319942',
+   'dingxizheng@gmail.com',
+   '16 Morbank Dr. Scarbough, M1V2M2',
+   '12355.jpg'
 
-                   
-//                   // console.log(customers[0].dataValues);
-                   
-//               });
-           
-//         });
+).success(function (customer) {
+
+    var promiseArr = [];
+    'key;word;one;two;three'.split(';').forEach(function(kw){
+        promiseArr.push(Keyword.getByName(kw));
+    });
+    
+    Q.all(promiseArr).then(function(results){
+        customer.setKeywords(results).success(function(){
+            res.send(customer.dataValues);
+        });
+    });
+    
+});
 
 // Link.new('facebook', 'wwww.facebook.com/dingxizheng')
 // 	.success(function (link) {

@@ -6,7 +6,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="customers" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -14,6 +14,8 @@
                             <th>Eamil</th>
                             <th>Address</th>
                             <th>Description</th>
+                            <th>Keywords</th>
+                            <th>Operations</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,6 +25,17 @@
                             <td>{{ customer.email }}</td>
                             <td>{{ customer.address }}</td>
                             <td>{{ customer.description }}</td>
+                            <td>
+                                <a ng-repeat="kw in customer.keywords" href="#">{{ kw }}   | </a>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a type="button" class="btn btn-default" title="Edit" ng-href="#/customers/{{ customer.id }}/action/edit"><i class="fa fa-edit"></i>
+                                    </a>
+                                    <a type="button" class="btn btn-default" ng-href="#/customers/{{ customer.id }}/action/delete" title="Delete"><i class="fa fa-trash-o"></i>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -32,6 +45,8 @@
                             <th>Eamil</th>
                             <th>Address</th>
                             <th>Description</th>
+                            <th>Keywords</th>
+                            <th>Operations</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -39,5 +54,15 @@
             <!-- /.box-body -->
         </div>
         <!-- /.box -->
+        <script type="text/javascript">
+        $('#customers').dataTable({
+            "bPaginate": true,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": true,
+            "bAutoWidth": false
+        });
+        </script>
     </div>
 </div>

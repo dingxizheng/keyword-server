@@ -14,22 +14,36 @@
                     <!-- text input -->
                     <div class="form-group">
                         <label>Name</label>
-                        <input type="text" class="form-control" placeholder="Enter ..." ng-model="customer.name">
+                        <input type="text" class="form-control" placeholder="Customer Name" ng-model="customer.name">
                     </div>
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="text" class="form-control" placeholder="Enter ..." ng-model="customer.telephone">
+                        <input type="text" class="form-control" placeholder="Phone Number xxx xxx xxxx" ng-model="customer.telephone">
                     </div>
                     <div class="form-group">
                         <label>Eamil</label>
-                        <input type="email" class="form-control" placeholder="Enter ..." ng-model="customer.email">
+                        <input type="email" class="form-control" placeholder="Email Address" ng-model="customer.email">
                     </div>
 
                     <div class="form-group">
                         <label>Address</label>
-                        <input type="text" class="form-control" placeholder="Enter ..." ng-model="customer.address">
+                        <input type="text" class="form-control" placeholder="Address" ng-model="customer.address">
                     </div>
 
+                    <div class="form-group">
+                        <label>Keywords</label>
+                        <input type="text" class="form-control" placeholder="Keywords('one;two;three')" ng-model="customer.keywords">
+                    </div>
+
+                    <div class="form-group" ng-controller="uploadCtrl">
+                        <label for="logoFile">Logo</label>
+                        <input id="logoFile" type="file" name="image" onchange="angular.element(this).scope().uploadFile(this.files)">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <img class="margin" ng-src="{{ '/admin/uploaded/croped_' + $parent.customer.logo }}"/>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- textarea -->
                     <div class="form-group">
@@ -37,9 +51,14 @@
                         <textarea class="form-control" rows="3" placeholder="Enter ..." ng-model="customer.description"></textarea>
                     </div>
 
-                   <div class="box-footer">
+                    <div class="box-footer" ng-show="!editMode">
                         <button type="submit" class="btn btn-primary" ng-click="addCustomer(customer);">Submit</button>
-                   </div>
+                    </div>
+
+                    <div class="box-footer" ng-show="editMode">
+                        <button type="submit" class="btn btn-primary" ng-click="updateCustomer(customer);">Update</button>
+                    </div>
+
 
                 </form>
             </div>

@@ -11,6 +11,7 @@ var engine = require('swig');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
+var multer = require('multer');
 
 
 
@@ -31,16 +32,35 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(passport.initialize());
-app.use(passport.session())
+app.use(passport.session());
+app.use(multer({
+    dest: './uploads/'
+}));
 app.use('/admin', express.static(path.join(__dirname, 'admin/ATE')));
+
+// inject login checking function to every req object
+// this function can be called anywhere after this
+app.use(function(req, res, next) {
+    req.checkLogin = function() {
+        if (!req.isAuthenticated()) {
+            var err = new Error();
+            err.status = 401;
+            err.message = 'You are not authorized. Please login.';
+            next(err);        
+        }
+    };
+    next();
+});
 
 // load controllers  
 var customers = require('./controllers/customers');
 var keywords = require('./controllers/keywords');
+var fileuploader = require('./controllers/fileuploader');
 
 // load routes
 app.use('/customers', customers);
 app.use('/keywords', keywords);
+app.use('/images', fileuploader);
 
 app.get('/admin', function(req, res, next) {
     res.redirect('./admin/ATE/index.html');
