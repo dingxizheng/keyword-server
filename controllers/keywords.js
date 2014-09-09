@@ -19,7 +19,11 @@ router.get('/', function(req, res, next) {
         });
 
         Q.all(promiseArr).then(function (results) {
-            console.log(results);
+            res.send(keywords.map(function(keyword, i){
+                var customers = results[i];
+                keyword.dataValues.customers = customers.map(function(c){  return { id:c.id, name:c.name }; });
+                return keyword.dataValues;
+            }));
         });
 
     });

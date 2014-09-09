@@ -6,7 +6,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="keywords" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>keyword</th>
@@ -16,7 +16,9 @@
                     <tbody>
                         <tr ng-repeat="keyword in keywords">
                             <td>{{ keyword.name }}</td>
-                            <td>{{  }}</td>
+                            <td>
+                                <a ng-repeat="cs in keyword.customers" href="#/customers/{{ cs.id }}/action/edit">#{{ cs.name }} </a>
+                            </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -30,5 +32,18 @@
             <!-- /.box-body -->
         </div>
         <!-- /.box -->
+        <script type="text/javascript">
+        function renderTable() {
+            $('#keywords').dataTable({
+                "bPaginate": true,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": true,
+                "bAutoWidth": false
+            });
+        }
+        </script>
+
     </div>
 </div>

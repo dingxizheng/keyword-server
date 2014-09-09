@@ -109,29 +109,29 @@ var gm = require('gm').subClass({
 //     });
 // });
 
-Customer.new(
+// Customer.new(
 
-   'dingxizheng',
-   'This is dingxizheng\'s Business',
-   '8076319942',
-   'dingxizheng@gmail.com',
-   '16 Morbank Dr. Scarbough, M1V2M2',
-   '12355.jpg'
+//    'dingxizheng',
+//    'This is dingxizheng\'s Business',
+//    '8076319942',
+//    'dingxizheng@gmail.com',
+//    '16 Morbank Dr. Scarbough, M1V2M2',
+//    '12355.jpg'
 
-).success(function (customer) {
+// ).success(function (customer) {
 
-    var promiseArr = [];
-    'key;word;one;two;three'.split(';').forEach(function(kw){
-        promiseArr.push(Keyword.getByName(kw));
-    });
+//     var promiseArr = [];
+//     'key;word;one;two;three'.split(';').forEach(function(kw){
+//         promiseArr.push(Keyword.getByName(kw));
+//     });
     
-    Q.all(promiseArr).then(function(results){
-        customer.setKeywords(results).success(function(){
-            res.send(customer.dataValues);
-        });
-    });
+//     Q.all(promiseArr).then(function(results){
+//         customer.setKeywords(results).success(function(){
+//             // res.send(customer.dataValues);
+//         });
+//     });
     
-});
+// });
 
 // Link.new('facebook', 'wwww.facebook.com/dingxizheng')
 // 	.success(function (link) {

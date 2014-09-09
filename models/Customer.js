@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-
 module.exports = function(sequelize, DataType) {
 
     var Customer = sequelize.define('Customer', {
@@ -60,8 +59,6 @@ module.exports = function(sequelize, DataType) {
                  *       telephone number
                  * @param email:
                  *       email address
-                 * @param callback
-                 *       calllback function
                  */
                 new: function(name, description, telephone, email, address, logo) {
 
@@ -93,7 +90,54 @@ module.exports = function(sequelize, DataType) {
 
             },
 
-            instanceMethods: {}
+            instanceMethods: {
+
+                /*
+                 * set up keywords by passing an keyword names list
+                 * @param keywords
+                 *        keywords list : ['one', 'two', 'three']
+                 * @return
+                 *        an promise
+                 *
+                 */
+                setKeywordsArray: function(keywords) {
+                    var that = this;
+                    var Q = require('q');
+                    var Keyword = sequelize.models.Keyword;
+                    var promiseArr = [];
+                    keywords.forEach(function(kw) {
+                        promiseArr.push(Keyword.getByName(kw));
+                    });
+
+                    return Q.all(promiseArr).then(function(results) {
+                        return that.setKeywords(results);
+                    });
+                },
+
+
+                /*
+                 * crated a new Customer entry
+                 * @param name:
+                 *       customer name
+                 * @param decription:
+                 *       decription of customer
+                 * @param telephone:
+                 *       telephone number
+                 * @param email:
+                 *       email address
+                 */
+                updateFields: function(name, description, telephone, email, address, logo) {
+                    return this.updateAttributes({
+                        name: name,
+                        description: description,
+                        telephone: telephone,
+                        email: email,
+                        address: address,
+                        logo: logo
+                    });
+                }
+
+            }
 
         });
 

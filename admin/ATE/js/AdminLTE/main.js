@@ -83,17 +83,41 @@
 
 
     app.config(function($httpProvider) {
-        $httpProvider.interceptors.push(['$q', '$location',
-            function($q, $location) {
+        $httpProvider.interceptors.push(['$q', '$location', '$injector', '$rootScope',
+            function($q, $location, $injector, $rootScope) {
                 return {
                     'response': function(response) {
+                        if (response.data.message) {
+                            // console.log(response.data.message);
+                            $rootScope.$broadcast('alertMsg', {
+                                title: 'Message',
+                                message: response.data.message,
+                                class: 'info'
+                            });
+                        }
                         return response;
                     },
                     'responseError': function(rejection) {
+                        var state = $injector.get('$state');
                         if (rejection.status === 401) {
-                            $location.path('/login');
+                            state.go('login');
+                            // show the error message on alert-view
+                            $rootScope.$broadcast('alertMsg', {
+                                title: 'Error',
+                                message: rejection.data.message,
+                                class: 'warning'
+                            });
+
                         } else if (rejection.status === 404) {
-                            $location.path('/notfound');
+                            state.go('notfound');
+                        } else {
+                            // show the error message when a server error occurs
+                            $rootScope.$broadcast('alertMsg', {
+                                title: 'Error',
+                                message: rejection.data.message || rejection.data.error,
+                                class: 'warning'
+                            });
+
                         }
                         return $q.reject(rejection);
                     }
@@ -164,7 +188,30 @@
 
     });
 
-    app.controller('customerCtrl', function($scope, $http, $state, $stateParams) {
+    /**
+     * alert controller
+     * takes care all messages that from the server
+     */
+    app.controller('alertCtrl', function($scope, $timeout) {
+        $scope.title = '';
+        $scope.message = '';
+        $scope.class = '';
+        $scope.show = false;
+
+        $scope.$on('alertMsg', function(event, data) {
+            $scope.title = data.title;
+            $scope.message = data.message;
+            $scope.class = data.class;
+            $scope.show = true;
+            // dismiss the alert message after 5 seconds
+            $timeout(function() {
+                $scope.show = false;
+            }, 5000);
+        });
+
+    });
+
+    app.controller('customerCtrl', function($scope, $http, $state, $stateParams, $timeout) {
 
         $scope.customers = [];
 
@@ -178,7 +225,16 @@
             $http.get('/customers')
                 .success(function(data, status, header) {
                     $scope.customers = data;
-                    console.log(data);
+                    $timeout(function() {
+                        $('#customers').dataTable({
+                            "bPaginate": true,
+                            "bLengthChange": false,
+                            "bFilter": false,
+                            "bSort": true,
+                            "bInfo": true,
+                            "bAutoWidth": true
+                        });
+                    }, 500);
                 });
         };
 
@@ -199,21 +255,21 @@
         };
 
         $scope.updateCustomer = function(customer) {
-            $http.put('/customers/update', customer)
+            $http.put('/customers/' + customer.id, customer)
                 .success(function(data, status, header) {
                     $state.go('customer');
                 });
 
         };
 
-        if ($stateParams.customerId && $stateParams.action === 'edit'){
+        if ($stateParams.customerId && $stateParams.action === 'edit') {
             $scope.getCustomer($stateParams.customerId);
             $scope.editMode = true;
         }
 
     });
 
-    app.controller('keywordCtrl', function($scope, $http) {
+    app.controller('keywordCtrl', function($scope, $http, $timeout) {
 
         $scope.keywords = [];
 
@@ -221,7 +277,16 @@
             $http.get('/keywords')
                 .success(function(data, status, header) {
                     $scope.keywords = data;
-                    console.log(data);
+                    $timeout(function() {
+                        $('#keywords').dataTable({
+                            "bPaginate": true,
+                            "bLengthChange": false,
+                            "bFilter": false,
+                            "bSort": true,
+                            "bInfo": true,
+                            "bAutoWidth": true
+                        });
+                    }, 500);
                 });
         };
 

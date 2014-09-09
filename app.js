@@ -24,7 +24,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
 app.use(session({
-    secret: 'keyboard cat'
+    secret: 'keyboard cat',
+    cookie: { maxAge : 3600000 } 
 }));
 app.use(favicon());
 app.use(logger('dev'));
@@ -46,8 +47,10 @@ app.use(function(req, res, next) {
             var err = new Error();
             err.status = 401;
             err.message = 'You are not authorized. Please login.';
-            next(err);        
+            next(err); 
+            return false;    
         }
+        return true;
     };
     next();
 });
